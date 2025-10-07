@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Extended Phase Graphs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.32.0/plotly.min.js"></script>
+  <style>
+    body { background:#1e1e1e; color:#e0e0e0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; margin:0; }
+    .wrap { max-width:1200px; margin:24px auto; padding:0 16px; }
+    h1 { text-align:center; font-weight:700; margin: 8px 0 18px; }
+    .main { display:grid; grid-template-columns: 360px minmax(480px, 1fr); gap:18px; align-items:start; }
+    .sidebar { background:#252525; border:1px solid #343434; border-radius:16px; padding:16px; position:sticky; top:16px; }
+    .sidebar h2 { margin:0 0 8px; font-size:18px; }
+    .control { margin:14px 0; }
+    .row { display:flex; align-items:center; gap:10px; }
+    .row label { white-space:nowrap; min-width:130px; }
+    input[type=range] { width:100%; }
+    .val { min-width:64px; text-align:right; opacity:0.9; }
+    .tip { opacity:0.7; font-size:13px; margin-top: 4px; }
+    #plot { height: 640px; }
+    footer { opacity:0.7; font-size:12px; margin:16px 0 24px; }
+    a { color:#8ecae6; }
+    .legend-note { font-size:12px; opacity:0.75; margin-top:6px; }
+    .panel { margin-top:14px; }
+    .err { color:#ffb4a2; font-size:13px; margin-bottom:4px; }
+    #echoPlot { height:420px; margin-top:6px; border:1px solid #343434; border-radius:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Extended Phase Graphs with Spin Echo Simulation</h1>
+
+    <div class="main">
+      <div class="sidebar">
+        <h2>Controls</h2>
+
+        <div class="control">
+          <div class="row">
+            <label for="fa1">Flip Angle 1</label>
+            <input id="fa1" type="range" min="0" max="180" step="4" value="110" />
+            <div class="val"><span id="fa1v">110</span>°</div>
+          </div>
+          <div class="tip">First RF pulse (degrees)</div>
+        </div>
+
+        <div class="control">
+          <div class="row">
+            <label for="fa2">Flip Angle 2</label>
+            <input id="fa2" type="range" min="0" max="180" step="4" value="110" />
+            <div class="val"><span id="fa2v">110</span>°</div>
+          </div>
+          <div class="tip">Second RF pulse (degrees)</div>
+        </div>
+
+        <div class="control">
+          <div class="row">
+            <label for="fa3">Flip Angle 3</label>
+            <input id="fa3" type="range" min="0" max="180" step="4" value="110" />
+            <div class="val"><span id="fa3v">110</span>°</div>
+          </div>
+          <div class="tip">Third RF pulse (degrees)</div>
+        </div>
+
+        <div class="control">
+          <div class="row">
+            <label for="tfrac">𝜏₂ / 𝜏₁</label>
+            <input id="tfrac" type="range" min="0.5" max="2.5" step="0.0625" value="1.5" />
+            <div class="val"><span id="tfracv">1.50</span></div>
+          </div>
+          <div class="tip">Time spacing ratio between RF1→RF2 (𝜏₁) and RF2→RF3 (𝜏₂)</div>
+        </div>
+
+        <div class="control">
+          <div class="row">
+            <label for="t2">T2 (normalized)</label>
+            <input id="t2" type="range" min="0.2" max="10" step="0.1" value="3.0" />
+            <div class="val"><span id="t2v">3.00</span></div>
+          </div>
+          <div class="tip">Relaxation time; larger T2 = slower decay.</div>
+        </div>
+
+        <div class="control">
+          <div class="row">
+            <label for="apply3rd">Apply 3rd RF</label>
+            <input id="apply3rd" type="checkbox" checked />
+          </div>
+          <div class="tip">Uncheck to skip the third RF pulse but continue acquisition.</div>
+        </div>
+      </div>
+
+      <div>
+        <div id="plotError" class="err"></div>
+        <div id="plot"></div>
+
+        <div class="panel">
+          <h2 style="margin:14px 0 6px;font-size:18px;font-weight:700;">Spin Echo Simulation</h2>
+          <div id="echoError" class="err"></div>
+          <div id="echoPlot"></div>
+        </div>
+
+        <div class="legend-note">Line brightness encodes |magnetization| for each segment. Dots mark echoes when present.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="phase_app.js" defer></script>
+</body>
+</html>
